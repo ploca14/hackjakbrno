@@ -1,5 +1,5 @@
 from pydantic import BaseModel
-from dto.HealthService import HealthService
+from dto.response.HealthService import HealthService
 
 
 class PatientHistory(BaseModel):
