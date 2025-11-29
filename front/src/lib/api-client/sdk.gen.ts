@@ -2,7 +2,7 @@
 
 import type { Client, Options as Options2, TDataShape } from './client';
 import { client } from './client.gen';
-import type { CreateItemItemsPostData, CreateItemItemsPostErrors, CreateItemItemsPostResponses, GetItemsItemsGetData, GetItemsItemsGetResponses } from './types.gen';
+import type { GetPatientEwsPatientsPatientIdEwsGetData, GetPatientEwsPatientsPatientIdEwsGetErrors, GetPatientEwsPatientsPatientIdEwsGetResponses, GetPatientFuturesPatientsPatientIdFuturesGetData, GetPatientFuturesPatientsPatientIdFuturesGetErrors, GetPatientFuturesPatientsPatientIdFuturesGetResponses, GetPatientHistoryPatientsPatientIdHistoryGetData, GetPatientHistoryPatientsPatientIdHistoryGetErrors, GetPatientHistoryPatientsPatientIdHistoryGetResponses, GetPatientPatientsPatientIdGetData, GetPatientPatientsPatientIdGetErrors, GetPatientPatientsPatientIdGetResponses, GetPatientsPatientsGetData, GetPatientsPatientsGetResponses, SuggestSuggestGetData, SuggestSuggestGetResponses } from './types.gen';
 
 export type Options<TData extends TDataShape = TDataShape, ThrowOnError extends boolean = boolean> = Options2<TData, ThrowOnError> & {
     /**
@@ -19,18 +19,41 @@ export type Options<TData extends TDataShape = TDataShape, ThrowOnError extends 
 };
 
 /**
- * Get Items
+ * Suggest
  */
-export const getItemsItemsGet = <ThrowOnError extends boolean = false>(options?: Options<GetItemsItemsGetData, ThrowOnError>) => (options?.client ?? client).get<GetItemsItemsGetResponses, unknown, ThrowOnError>({ url: '/items/', ...options });
+export const suggestSuggestGet = <ThrowOnError extends boolean = false>(options?: Options<SuggestSuggestGetData, ThrowOnError>) => (options?.client ?? client).get<SuggestSuggestGetResponses, unknown, ThrowOnError>({ url: '/suggest', ...options });
 
 /**
- * Create Item
+ * Get Patients
+ *
+ * Get list of patients
  */
-export const createItemItemsPost = <ThrowOnError extends boolean = false>(options: Options<CreateItemItemsPostData, ThrowOnError>) => (options.client ?? client).post<CreateItemItemsPostResponses, CreateItemItemsPostErrors, ThrowOnError>({
-    url: '/items/',
-    ...options,
-    headers: {
-        'Content-Type': 'application/json',
-        ...options.headers
-    }
-});
+export const getPatientsPatientsGet = <ThrowOnError extends boolean = false>(options?: Options<GetPatientsPatientsGetData, ThrowOnError>) => (options?.client ?? client).get<GetPatientsPatientsGetResponses, unknown, ThrowOnError>({ url: '/patients', ...options });
+
+/**
+ * Get Patient
+ *
+ * Get detail of a patient
+ */
+export const getPatientPatientsPatientIdGet = <ThrowOnError extends boolean = false>(options: Options<GetPatientPatientsPatientIdGetData, ThrowOnError>) => (options.client ?? client).get<GetPatientPatientsPatientIdGetResponses, GetPatientPatientsPatientIdGetErrors, ThrowOnError>({ url: '/patients/{patient_id}', ...options });
+
+/**
+ * Get Patient History
+ *
+ * Get history of this patient
+ */
+export const getPatientHistoryPatientsPatientIdHistoryGet = <ThrowOnError extends boolean = false>(options: Options<GetPatientHistoryPatientsPatientIdHistoryGetData, ThrowOnError>) => (options.client ?? client).get<GetPatientHistoryPatientsPatientIdHistoryGetResponses, GetPatientHistoryPatientsPatientIdHistoryGetErrors, ThrowOnError>({ url: '/patients/{patient_id}/history', ...options });
+
+/**
+ * Get Patient Futures
+ *
+ * Get possible futures of this patient
+ */
+export const getPatientFuturesPatientsPatientIdFuturesGet = <ThrowOnError extends boolean = false>(options: Options<GetPatientFuturesPatientsPatientIdFuturesGetData, ThrowOnError>) => (options.client ?? client).get<GetPatientFuturesPatientsPatientIdFuturesGetResponses, GetPatientFuturesPatientsPatientIdFuturesGetErrors, ThrowOnError>({ url: '/patients/{patient_id}/futures', ...options });
+
+/**
+ * Get Patient Ews
+ *
+ * Get a list of possible DRGs that could happen to this person within given time frame
+ */
+export const getPatientEwsPatientsPatientIdEwsGet = <ThrowOnError extends boolean = false>(options: Options<GetPatientEwsPatientsPatientIdEwsGetData, ThrowOnError>) => (options.client ?? client).get<GetPatientEwsPatientsPatientIdEwsGetResponses, GetPatientEwsPatientsPatientIdEwsGetErrors, ThrowOnError>({ url: '/patients/{patient_id}/ews', ...options });

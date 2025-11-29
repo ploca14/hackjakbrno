@@ -42,7 +42,7 @@ async def suggest():
             "type": SuggestResultType.PATIENT
         },
         {
-            "label": "874674624 (Nemocnice Brno Kamo)",
+            "label": "874674624 (NemocnTBrno Kamo)",
             "type": SuggestResultType.SERVICE_PROVIDER
         },
         {
