@@ -5,6 +5,35 @@ export type ClientOptions = {
 };
 
 /**
+ * DRG
+ */
+export type Drg = {
+    /**
+     * Code
+     */
+    code: string;
+    /**
+     * Label
+     */
+    label: string;
+};
+
+/**
+ * EWS
+ */
+export type Ews = {
+    drg: Drg;
+    /**
+     * Probability
+     */
+    probability: number;
+    /**
+     * Eta
+     */
+    eta: number;
+};
+
+/**
  * HTTPValidationError
  */
 export type HttpValidationError = {
@@ -15,28 +44,82 @@ export type HttpValidationError = {
 };
 
 /**
- * Item
+ * HealthService
  */
-export type Item = {
+export type HealthService = {
+    /**
+     * Label
+     */
+    label: string;
+    type: HealthServiceType;
+    /**
+     * Delta Days
+     */
+    delta_days: number;
+    /**
+     * Detail
+     */
+    detail: unknown;
+};
+
+/**
+ * HealthServiceType
+ */
+export type HealthServiceType = 'PROCEDURE' | 'MEDICATION' | 'HEALTH_TOOL' | 'STOMATOLOGICAL_TOOL' | 'TRANSPORT' | 'DEATH';
+
+/**
+ * Patient
+ */
+export type Patient = {
+    /**
+     * Patient Id
+     */
+    patient_id: string;
     /**
      * Name
      */
     name: string;
-    /**
-     * Price
-     */
-    price: number;
 };
 
 /**
- * ResponseMessage
+ * PatientFuture
  */
-export type ResponseMessage = {
+export type PatientFuture = {
     /**
-     * Message
+     * Expected Health Services
      */
-    message: string;
+    expected_health_services: Array<HealthService>;
+    /**
+     * Probability
+     */
+    probability: number;
 };
+
+/**
+ * PatientHistory
+ */
+export type PatientHistory = {
+    /**
+     * Received Health Services
+     */
+    received_health_services: Array<HealthService>;
+};
+
+/**
+ * SuggestResult
+ */
+export type SuggestResult = {
+    /**
+     * Label
+     */
+    label: string;
+    type: SuggestResultType;
+};
+
+/**
+ * SuggestResultType
+ */
+export type SuggestResultType = 'PATIENT' | 'SERVICE_PROVIDER' | 'DRG';
 
 /**
  * ValidationError
@@ -56,45 +139,162 @@ export type ValidationError = {
     type: string;
 };
 
-export type GetItemsItemsGetData = {
+export type SuggestSuggestGetData = {
     body?: never;
     path?: never;
     query?: never;
-    url: '/items/';
+    url: '/suggest';
 };
 
-export type GetItemsItemsGetResponses = {
+export type SuggestSuggestGetResponses = {
     /**
-     * Response Get Items Items  Get
+     * Response Suggest Suggest Get
      *
      * Successful Response
      */
-    200: Array<Item>;
+    200: Array<SuggestResult>;
 };
 
-export type GetItemsItemsGetResponse = GetItemsItemsGetResponses[keyof GetItemsItemsGetResponses];
+export type SuggestSuggestGetResponse = SuggestSuggestGetResponses[keyof SuggestSuggestGetResponses];
 
-export type CreateItemItemsPostData = {
-    body: Item;
+export type GetPatientsPatientsGetData = {
+    body?: never;
     path?: never;
     query?: never;
-    url: '/items/';
+    url: '/patients';
 };
 
-export type CreateItemItemsPostErrors = {
+export type GetPatientsPatientsGetResponses = {
+    /**
+     * Response Get Patients Patients Get
+     *
+     * Successful Response
+     */
+    200: Array<Patient>;
+};
+
+export type GetPatientsPatientsGetResponse = GetPatientsPatientsGetResponses[keyof GetPatientsPatientsGetResponses];
+
+export type GetPatientPatientsPatientIdGetData = {
+    body?: never;
+    path: {
+        /**
+         * Patient Id
+         */
+        patient_id: unknown;
+    };
+    query?: never;
+    url: '/patients/{patient_id}';
+};
+
+export type GetPatientPatientsPatientIdGetErrors = {
     /**
      * Validation Error
      */
     422: HttpValidationError;
 };
 
-export type CreateItemItemsPostError = CreateItemItemsPostErrors[keyof CreateItemItemsPostErrors];
+export type GetPatientPatientsPatientIdGetError = GetPatientPatientsPatientIdGetErrors[keyof GetPatientPatientsPatientIdGetErrors];
 
-export type CreateItemItemsPostResponses = {
+export type GetPatientPatientsPatientIdGetResponses = {
     /**
      * Successful Response
      */
-    200: ResponseMessage;
+    200: Patient;
 };
 
-export type CreateItemItemsPostResponse = CreateItemItemsPostResponses[keyof CreateItemItemsPostResponses];
+export type GetPatientPatientsPatientIdGetResponse = GetPatientPatientsPatientIdGetResponses[keyof GetPatientPatientsPatientIdGetResponses];
+
+export type GetPatientHistoryPatientsPatientIdHistoryGetData = {
+    body?: never;
+    path: {
+        /**
+         * Patient Id
+         */
+        patient_id: unknown;
+    };
+    query?: never;
+    url: '/patients/{patient_id}/history';
+};
+
+export type GetPatientHistoryPatientsPatientIdHistoryGetErrors = {
+    /**
+     * Validation Error
+     */
+    422: HttpValidationError;
+};
+
+export type GetPatientHistoryPatientsPatientIdHistoryGetError = GetPatientHistoryPatientsPatientIdHistoryGetErrors[keyof GetPatientHistoryPatientsPatientIdHistoryGetErrors];
+
+export type GetPatientHistoryPatientsPatientIdHistoryGetResponses = {
+    /**
+     * Successful Response
+     */
+    200: PatientHistory;
+};
+
+export type GetPatientHistoryPatientsPatientIdHistoryGetResponse = GetPatientHistoryPatientsPatientIdHistoryGetResponses[keyof GetPatientHistoryPatientsPatientIdHistoryGetResponses];
+
+export type GetPatientFuturesPatientsPatientIdFuturesGetData = {
+    body?: never;
+    path: {
+        /**
+         * Patient Id
+         */
+        patient_id: unknown;
+    };
+    query?: never;
+    url: '/patients/{patient_id}/futures';
+};
+
+export type GetPatientFuturesPatientsPatientIdFuturesGetErrors = {
+    /**
+     * Validation Error
+     */
+    422: HttpValidationError;
+};
+
+export type GetPatientFuturesPatientsPatientIdFuturesGetError = GetPatientFuturesPatientsPatientIdFuturesGetErrors[keyof GetPatientFuturesPatientsPatientIdFuturesGetErrors];
+
+export type GetPatientFuturesPatientsPatientIdFuturesGetResponses = {
+    /**
+     * Response Get Patient Futures Patients  Patient Id  Futures Get
+     *
+     * Successful Response
+     */
+    200: Array<PatientFuture>;
+};
+
+export type GetPatientFuturesPatientsPatientIdFuturesGetResponse = GetPatientFuturesPatientsPatientIdFuturesGetResponses[keyof GetPatientFuturesPatientsPatientIdFuturesGetResponses];
+
+export type GetPatientEwsPatientsPatientIdEwsGetData = {
+    body?: never;
+    path: {
+        /**
+         * Patient Id
+         */
+        patient_id: unknown;
+    };
+    query?: never;
+    url: '/patients/{patient_id}/ews';
+};
+
+export type GetPatientEwsPatientsPatientIdEwsGetErrors = {
+    /**
+     * Validation Error
+     */
+    422: HttpValidationError;
+};
+
+export type GetPatientEwsPatientsPatientIdEwsGetError = GetPatientEwsPatientsPatientIdEwsGetErrors[keyof GetPatientEwsPatientsPatientIdEwsGetErrors];
+
+export type GetPatientEwsPatientsPatientIdEwsGetResponses = {
+    /**
+     * Response Get Patient Ews Patients  Patient Id  Ews Get
+     *
+     * Successful Response
+     */
+    200: Array<Ews>;
+};
+
+export type GetPatientEwsPatientsPatientIdEwsGetResponse = GetPatientEwsPatientsPatientIdEwsGetResponses[keyof GetPatientEwsPatientsPatientIdEwsGetResponses];

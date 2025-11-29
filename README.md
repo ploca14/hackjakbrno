@@ -8,6 +8,12 @@ Haven't tried it, but ChatGPT told made me do it
 =======
 ## Quick Start
 
+Download data:
+
+```bash
+uv run --with pandas,openpyxl,gdown,py7zr python load_data.py
+```
+
 Start everything:
 
 ```bash

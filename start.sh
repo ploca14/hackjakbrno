@@ -53,9 +53,11 @@ cd "$SCRIPT_DIR/back"
 uv run fastapi dev &
 BACKEND_PID=$!
 
+
 # Start frontend in background
 echo "🔧 Starting Vite frontend..."
 cd "$SCRIPT_DIR/front"
+pnpm i
 pnpm dev &
 FRONTEND_PID=$!
 

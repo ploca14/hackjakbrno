@@ -18,6 +18,7 @@ from dto.response.patient.PatientHistory import PatientHistory
 from dto.response.patient.PatientFuture import PatientFuture
 from dto.response.EWS import EWS
 from fastapi.middleware.cors import CORSMiddleware
+from database import get_patient_events
 
 app = FastAPI()
 
@@ -42,8 +43,8 @@ async def suggest():
             "type": SuggestResultType.PATIENT
         },
         {
-            "label": "874674624 (Brno Kamo)",
-            "type": SuggestResultType.PATIENT
+            "label": "874674624 (NemocnTBrno Kamo)",
+            "type": SuggestResultType.SERVICE_PROVIDER
         },
         {
             "label": "Toxické účinky (21-X03)",
@@ -68,27 +69,21 @@ async def get_patient(patient_id):
 
 @app.get("/patients/{patient_id}/history", description="Get history of this patient", response_model=PatientHistory)
 async def get_patient_history(patient_id):
+    events = get_patient_events(patient_id)
+    
+    # Map database events to API response format
+    api_events = []
+    for event in events:
+        # Simple mapping, you might want to refine this based on event type
+        api_events.append({
+            "label": event.label,
+            "type": HealthServiceType.PROCEDURE, # Defaulting to PROCEDURE for now, map properly if needed
+            "delta_days": event.date,
+            "detail": event.detail
+        })
+        
     return JSONResponse(content={
-        "received_health_services": [
-            {
-                "label": "Operace slepého střeva",
-                "type": HealthServiceType.PROCEDURE,
-                "delta_days": 0,
-                "detail": {}
-            },
-            {
-                "label": "Návštěva praktického lékaře",
-                "type": HealthServiceType.PROCEDURE,
-                "delta_days": -3,
-                "detail": {}
-            },
-            {
-                "label": "Návštěva praktického lékaře",
-                "type": HealthServiceType.PROCEDURE,
-                "delta_days": -6,
-                "detail": {}
-            }
-        ]
+        "received_health_services": api_events
     })
 
 
