@@ -1,5 +1,13 @@
 from fastapi import FastAPI
 import json
+from typing import Optional
+import logging
+
+class EndpointFilter(logging.Filter):
+    def filter(self, record: logging.LogRecord) -> bool:
+        return "/openapi.json" not in record.getMessage()
+
+logging.getLogger("uvicorn.access").addFilter(EndpointFilter())
 
 from dto.SuggestResult import SuggestResult
 from dto.patient.Patient import Patient
