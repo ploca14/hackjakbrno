@@ -1,6 +1,14 @@
 from fastapi import FastAPI
 from pydantic import BaseModel
 import json
+from typing import Optional
+import logging
+
+class EndpointFilter(logging.Filter):
+    def filter(self, record: logging.LogRecord) -> bool:
+        return "/openapi.json" not in record.getMessage()
+
+logging.getLogger("uvicorn.access").addFilter(EndpointFilter())
 
 app = FastAPI()
 

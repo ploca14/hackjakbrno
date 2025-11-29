@@ -3,9 +3,25 @@
 # Get the directory where the script is located
 SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
 
+# Store PIDs for cleanup
+BACKEND_PID=""
+FRONTEND_PID=""
+
 # Cleanup function to stop IRIS on exit
 cleanup() {
     echo ""
+    echo "🛑 Stopping services..."
+    
+    # Kill backend if running
+    if [ ! -z "$BACKEND_PID" ]; then
+        kill $BACKEND_PID 2>/dev/null || true
+    fi
+    
+    # Kill frontend if running
+    if [ ! -z "$FRONTEND_PID" ]; then
+        kill $FRONTEND_PID 2>/dev/null || true
+    fi
+    
     echo "🛑 Stopping IRIS database..."
     cd "$SCRIPT_DIR/docker" || exit
     docker-compose down
@@ -31,8 +47,17 @@ cd "$SCRIPT_DIR"
 echo "⏳ Waiting for IRIS to initialize..."
 sleep 5
 
-# Start backend
+# Start backend in background
 echo "🔧 Starting FastAPI backend..."
 cd "$SCRIPT_DIR/back"
-uv run fastapi dev
+uv run fastapi dev &
+BACKEND_PID=$!
 
+# Start frontend in background
+echo "🔧 Starting Vite frontend..."
+cd "$SCRIPT_DIR/front"
+pnpm dev &
+FRONTEND_PID=$!
+
+# Wait for both processes
+wait
