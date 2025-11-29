@@ -1,0 +1,8 @@
+{
+    "python.defaultInterpreterPath": "${workspaceFolder}/back/.venv/bin/python3",
+    "python.analysis.extraPaths": [
+        "${workspaceFolder}/back"
+    ],
+    "python.analysis.autoImportCompletions": true,
+    "python.analysis.typeCheckingMode": "basic"
+}
