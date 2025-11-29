@@ -1,18 +1,37 @@
 # hackjakbrno
 
-## Backend
+## Quick Start
 
-The backend is a FastAPI application located in the `back/` directory.
+Start everything:
 
-### Prerequisites
+```bash
+./start.sh
+```
 
-- [uv](https://docs.astral.sh/uv/) package manager
+Press `Ctrl+C` to stop all services.
 
-### Starting the Development Server
+## Manual Setup
+
+### Database (IRIS)
+
+Start the IRIS database with FHIR server:
+
+```bash
+cd docker
+docker-compose up -d
+```
+
+Access:
+- Management Portal: http://localhost:32783/csp/sys/UtilHome.csp (username: `_SYSTEM`, password: `ISCDEMO`)
+- FHIR API: http://localhost:32783/csp/healthshare/demo/fhir/r4
+
+### Backend
+
+Start the FastAPI server:
 
 ```bash
 cd back
 uv run fastapi dev
 ```
 
-The server will start at `http://localhost:8000` with auto-reload enabled for local development.
+Server runs at `http://localhost:8000`
