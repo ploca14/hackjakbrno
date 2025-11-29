@@ -24,7 +24,7 @@ app = FastAPI()
 app.add_middleware(
     CORSMiddleware,
     allow_origins=["http://localhost:5173", "http://127.0.0.1:5173", "http://localhost:3000", "http://127.0.0.1:3000"],
-    allow_methods=["*"],
+    allow_methods=["GET", "POST", "PUT", "DELETE", "OPTIONS"],
     allow_headers=["*"],
     expose_headers=["*"]
 )
@@ -71,24 +71,22 @@ async def get_patient_history(patient_id):
     return JSONResponse(content={
         "received_health_services": [
             {
-                {
-                    "label": "Operace slepého střeva",
-                    "type": HealthServiceType.PROCEDURE,
-                    "delta_days": 0,
-                    "detail": {}
-                },
-                {
-                    "label": "Návštěva praktického lékaře",
-                    "type": HealthServiceType.PROCEDURE,
-                    "delta_days": -3,
-                    "detail": {}
-                },
-                {
-                    "label": "Návštěva praktického lékaře",
-                    "type": HealthServiceType.PROCEDURE,
-                    "delta_days": -6,
-                    "detail": {}
-                }
+                "label": "Operace slepého střeva",
+                "type": HealthServiceType.PROCEDURE,
+                "delta_days": 0,
+                "detail": {}
+            },
+            {
+                "label": "Návštěva praktického lékaře",
+                "type": HealthServiceType.PROCEDURE,
+                "delta_days": -3,
+                "detail": {}
+            },
+            {
+                "label": "Návštěva praktického lékaře",
+                "type": HealthServiceType.PROCEDURE,
+                "delta_days": -6,
+                "detail": {}
             }
         ]
     })
