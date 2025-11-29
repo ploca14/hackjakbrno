@@ -1,6 +1,6 @@
 from pydantic import BaseModel
 
 
-class Item(BaseModel):
+class Patient(BaseModel):
+    patient_id: str
     name: str
-    price: float
