@@ -25,3 +25,10 @@ LOAD DATA FROM FILE '/data/pruchod/Ciselnik_ICZ.csv' INTO DATA.CiselnikICZ USING
 CREATE INDEX idx_hospitalizace_patient ON DATA.Hospitalizace (ID_PACIENT)
 CREATE INDEX idx_lazne_patient ON DATA.Lazne (ID_PACIENT)
 CREATE INDEX idx_pece_patient ON DATA.Pece (ID_PACIENT)
+
+-- Create table for Vector Embeddings
+DROP TABLE IF EXISTS DATA.PatientEmbeddings
+CREATE TABLE DATA.PatientEmbeddings (
+    ID_PACIENT VARCHAR(50),
+    Embedding VECTOR(DECIMAL, 384)
+)
