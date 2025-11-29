@@ -11,8 +11,17 @@
 import { Route as rootRouteImport } from './routes/__root'
 import { Route as MainLayoutRouteRouteImport } from './routes/_main-layout/route'
 import { Route as MainLayoutIndexRouteImport } from './routes/_main-layout/index'
+import { Route as MainLayoutWorkflowIndexRouteImport } from './routes/_main-layout/workflow/index'
+import { Route as MainLayoutSimulateIndexRouteImport } from './routes/_main-layout/simulate/index'
+import { Route as MainLayoutRegionalIndexRouteImport } from './routes/_main-layout/regional/index'
 import { Route as MainLayoutPatientsIndexRouteImport } from './routes/_main-layout/patients/index'
+import { Route as MainLayoutNetworkIndexRouteImport } from './routes/_main-layout/network/index'
+import { Route as MainLayoutEconomicsIndexRouteImport } from './routes/_main-layout/economics/index'
+import { Route as MainLayoutDashboardIndexRouteImport } from './routes/_main-layout/dashboard/index'
+import { Route as MainLayoutCohortsIndexRouteImport } from './routes/_main-layout/cohorts/index'
+import { Route as MainLayoutAnalyticsIndexRouteImport } from './routes/_main-layout/analytics/index'
 import { Route as MainLayoutPatientsPatientIdIndexRouteImport } from './routes/_main-layout/patients/$patientId/index'
+import { Route as MainLayoutAnomaliesAnomalyIdIndexRouteImport } from './routes/_main-layout/anomalies/$anomalyId/index'
 
 const MainLayoutRouteRoute = MainLayoutRouteRouteImport.update({
   id: '/_main-layout',
@@ -23,45 +32,154 @@ const MainLayoutIndexRoute = MainLayoutIndexRouteImport.update({
   path: '/',
   getParentRoute: () => MainLayoutRouteRoute,
 } as any)
+const MainLayoutWorkflowIndexRoute = MainLayoutWorkflowIndexRouteImport.update({
+  id: '/workflow/',
+  path: '/workflow/',
+  getParentRoute: () => MainLayoutRouteRoute,
+} as any)
+const MainLayoutSimulateIndexRoute = MainLayoutSimulateIndexRouteImport.update({
+  id: '/simulate/',
+  path: '/simulate/',
+  getParentRoute: () => MainLayoutRouteRoute,
+} as any)
+const MainLayoutRegionalIndexRoute = MainLayoutRegionalIndexRouteImport.update({
+  id: '/regional/',
+  path: '/regional/',
+  getParentRoute: () => MainLayoutRouteRoute,
+} as any)
 const MainLayoutPatientsIndexRoute = MainLayoutPatientsIndexRouteImport.update({
   id: '/patients/',
   path: '/patients/',
   getParentRoute: () => MainLayoutRouteRoute,
 } as any)
+const MainLayoutNetworkIndexRoute = MainLayoutNetworkIndexRouteImport.update({
+  id: '/network/',
+  path: '/network/',
+  getParentRoute: () => MainLayoutRouteRoute,
+} as any)
+const MainLayoutEconomicsIndexRoute =
+  MainLayoutEconomicsIndexRouteImport.update({
+    id: '/economics/',
+    path: '/economics/',
+    getParentRoute: () => MainLayoutRouteRoute,
+  } as any)
+const MainLayoutDashboardIndexRoute =
+  MainLayoutDashboardIndexRouteImport.update({
+    id: '/dashboard/',
+    path: '/dashboard/',
+    getParentRoute: () => MainLayoutRouteRoute,
+  } as any)
+const MainLayoutCohortsIndexRoute = MainLayoutCohortsIndexRouteImport.update({
+  id: '/cohorts/',
+  path: '/cohorts/',
+  getParentRoute: () => MainLayoutRouteRoute,
+} as any)
+const MainLayoutAnalyticsIndexRoute =
+  MainLayoutAnalyticsIndexRouteImport.update({
+    id: '/analytics/',
+    path: '/analytics/',
+    getParentRoute: () => MainLayoutRouteRoute,
+  } as any)
 const MainLayoutPatientsPatientIdIndexRoute =
   MainLayoutPatientsPatientIdIndexRouteImport.update({
     id: '/patients/$patientId/',
     path: '/patients/$patientId/',
     getParentRoute: () => MainLayoutRouteRoute,
   } as any)
+const MainLayoutAnomaliesAnomalyIdIndexRoute =
+  MainLayoutAnomaliesAnomalyIdIndexRouteImport.update({
+    id: '/anomalies/$anomalyId/',
+    path: '/anomalies/$anomalyId/',
+    getParentRoute: () => MainLayoutRouteRoute,
+  } as any)
 
 export interface FileRoutesByFullPath {
   '/': typeof MainLayoutIndexRoute
+  '/analytics': typeof MainLayoutAnalyticsIndexRoute
+  '/cohorts': typeof MainLayoutCohortsIndexRoute
+  '/dashboard': typeof MainLayoutDashboardIndexRoute
+  '/economics': typeof MainLayoutEconomicsIndexRoute
+  '/network': typeof MainLayoutNetworkIndexRoute
   '/patients': typeof MainLayoutPatientsIndexRoute
+  '/regional': typeof MainLayoutRegionalIndexRoute
+  '/simulate': typeof MainLayoutSimulateIndexRoute
+  '/workflow': typeof MainLayoutWorkflowIndexRoute
+  '/anomalies/$anomalyId': typeof MainLayoutAnomaliesAnomalyIdIndexRoute
   '/patients/$patientId': typeof MainLayoutPatientsPatientIdIndexRoute
 }
 export interface FileRoutesByTo {
   '/': typeof MainLayoutIndexRoute
+  '/analytics': typeof MainLayoutAnalyticsIndexRoute
+  '/cohorts': typeof MainLayoutCohortsIndexRoute
+  '/dashboard': typeof MainLayoutDashboardIndexRoute
+  '/economics': typeof MainLayoutEconomicsIndexRoute
+  '/network': typeof MainLayoutNetworkIndexRoute
   '/patients': typeof MainLayoutPatientsIndexRoute
+  '/regional': typeof MainLayoutRegionalIndexRoute
+  '/simulate': typeof MainLayoutSimulateIndexRoute
+  '/workflow': typeof MainLayoutWorkflowIndexRoute
+  '/anomalies/$anomalyId': typeof MainLayoutAnomaliesAnomalyIdIndexRoute
   '/patients/$patientId': typeof MainLayoutPatientsPatientIdIndexRoute
 }
 export interface FileRoutesById {
   __root__: typeof rootRouteImport
   '/_main-layout': typeof MainLayoutRouteRouteWithChildren
   '/_main-layout/': typeof MainLayoutIndexRoute
+  '/_main-layout/analytics/': typeof MainLayoutAnalyticsIndexRoute
+  '/_main-layout/cohorts/': typeof MainLayoutCohortsIndexRoute
+  '/_main-layout/dashboard/': typeof MainLayoutDashboardIndexRoute
+  '/_main-layout/economics/': typeof MainLayoutEconomicsIndexRoute
+  '/_main-layout/network/': typeof MainLayoutNetworkIndexRoute
   '/_main-layout/patients/': typeof MainLayoutPatientsIndexRoute
+  '/_main-layout/regional/': typeof MainLayoutRegionalIndexRoute
+  '/_main-layout/simulate/': typeof MainLayoutSimulateIndexRoute
+  '/_main-layout/workflow/': typeof MainLayoutWorkflowIndexRoute
+  '/_main-layout/anomalies/$anomalyId/': typeof MainLayoutAnomaliesAnomalyIdIndexRoute
   '/_main-layout/patients/$patientId/': typeof MainLayoutPatientsPatientIdIndexRoute
 }
 export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
-  fullPaths: '/' | '/patients' | '/patients/$patientId'
+  fullPaths:
+    | '/'
+    | '/analytics'
+    | '/cohorts'
+    | '/dashboard'
+    | '/economics'
+    | '/network'
+    | '/patients'
+    | '/regional'
+    | '/simulate'
+    | '/workflow'
+    | '/anomalies/$anomalyId'
+    | '/patients/$patientId'
   fileRoutesByTo: FileRoutesByTo
-  to: '/' | '/patients' | '/patients/$patientId'
+  to:
+    | '/'
+    | '/analytics'
+    | '/cohorts'
+    | '/dashboard'
+    | '/economics'
+    | '/network'
+    | '/patients'
+    | '/regional'
+    | '/simulate'
+    | '/workflow'
+    | '/anomalies/$anomalyId'
+    | '/patients/$patientId'
   id:
     | '__root__'
     | '/_main-layout'
     | '/_main-layout/'
+    | '/_main-layout/analytics/'
+    | '/_main-layout/cohorts/'
+    | '/_main-layout/dashboard/'
+    | '/_main-layout/economics/'
+    | '/_main-layout/network/'
     | '/_main-layout/patients/'
+    | '/_main-layout/regional/'
+    | '/_main-layout/simulate/'
+    | '/_main-layout/workflow/'
+    | '/_main-layout/anomalies/$anomalyId/'
     | '/_main-layout/patients/$patientId/'
   fileRoutesById: FileRoutesById
 }
@@ -85,11 +203,67 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof MainLayoutIndexRouteImport
       parentRoute: typeof MainLayoutRouteRoute
     }
+    '/_main-layout/workflow/': {
+      id: '/_main-layout/workflow/'
+      path: '/workflow'
+      fullPath: '/workflow'
+      preLoaderRoute: typeof MainLayoutWorkflowIndexRouteImport
+      parentRoute: typeof MainLayoutRouteRoute
+    }
+    '/_main-layout/simulate/': {
+      id: '/_main-layout/simulate/'
+      path: '/simulate'
+      fullPath: '/simulate'
+      preLoaderRoute: typeof MainLayoutSimulateIndexRouteImport
+      parentRoute: typeof MainLayoutRouteRoute
+    }
+    '/_main-layout/regional/': {
+      id: '/_main-layout/regional/'
+      path: '/regional'
+      fullPath: '/regional'
+      preLoaderRoute: typeof MainLayoutRegionalIndexRouteImport
+      parentRoute: typeof MainLayoutRouteRoute
+    }
     '/_main-layout/patients/': {
       id: '/_main-layout/patients/'
       path: '/patients'
       fullPath: '/patients'
       preLoaderRoute: typeof MainLayoutPatientsIndexRouteImport
+      parentRoute: typeof MainLayoutRouteRoute
+    }
+    '/_main-layout/network/': {
+      id: '/_main-layout/network/'
+      path: '/network'
+      fullPath: '/network'
+      preLoaderRoute: typeof MainLayoutNetworkIndexRouteImport
+      parentRoute: typeof MainLayoutRouteRoute
+    }
+    '/_main-layout/economics/': {
+      id: '/_main-layout/economics/'
+      path: '/economics'
+      fullPath: '/economics'
+      preLoaderRoute: typeof MainLayoutEconomicsIndexRouteImport
+      parentRoute: typeof MainLayoutRouteRoute
+    }
+    '/_main-layout/dashboard/': {
+      id: '/_main-layout/dashboard/'
+      path: '/dashboard'
+      fullPath: '/dashboard'
+      preLoaderRoute: typeof MainLayoutDashboardIndexRouteImport
+      parentRoute: typeof MainLayoutRouteRoute
+    }
+    '/_main-layout/cohorts/': {
+      id: '/_main-layout/cohorts/'
+      path: '/cohorts'
+      fullPath: '/cohorts'
+      preLoaderRoute: typeof MainLayoutCohortsIndexRouteImport
+      parentRoute: typeof MainLayoutRouteRoute
+    }
+    '/_main-layout/analytics/': {
+      id: '/_main-layout/analytics/'
+      path: '/analytics'
+      fullPath: '/analytics'
+      preLoaderRoute: typeof MainLayoutAnalyticsIndexRouteImport
       parentRoute: typeof MainLayoutRouteRoute
     }
     '/_main-layout/patients/$patientId/': {
@@ -99,18 +273,44 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof MainLayoutPatientsPatientIdIndexRouteImport
       parentRoute: typeof MainLayoutRouteRoute
     }
+    '/_main-layout/anomalies/$anomalyId/': {
+      id: '/_main-layout/anomalies/$anomalyId/'
+      path: '/anomalies/$anomalyId'
+      fullPath: '/anomalies/$anomalyId'
+      preLoaderRoute: typeof MainLayoutAnomaliesAnomalyIdIndexRouteImport
+      parentRoute: typeof MainLayoutRouteRoute
+    }
   }
 }
 
 interface MainLayoutRouteRouteChildren {
   MainLayoutIndexRoute: typeof MainLayoutIndexRoute
+  MainLayoutAnalyticsIndexRoute: typeof MainLayoutAnalyticsIndexRoute
+  MainLayoutCohortsIndexRoute: typeof MainLayoutCohortsIndexRoute
+  MainLayoutDashboardIndexRoute: typeof MainLayoutDashboardIndexRoute
+  MainLayoutEconomicsIndexRoute: typeof MainLayoutEconomicsIndexRoute
+  MainLayoutNetworkIndexRoute: typeof MainLayoutNetworkIndexRoute
   MainLayoutPatientsIndexRoute: typeof MainLayoutPatientsIndexRoute
+  MainLayoutRegionalIndexRoute: typeof MainLayoutRegionalIndexRoute
+  MainLayoutSimulateIndexRoute: typeof MainLayoutSimulateIndexRoute
+  MainLayoutWorkflowIndexRoute: typeof MainLayoutWorkflowIndexRoute
+  MainLayoutAnomaliesAnomalyIdIndexRoute: typeof MainLayoutAnomaliesAnomalyIdIndexRoute
   MainLayoutPatientsPatientIdIndexRoute: typeof MainLayoutPatientsPatientIdIndexRoute
 }
 
 const MainLayoutRouteRouteChildren: MainLayoutRouteRouteChildren = {
   MainLayoutIndexRoute: MainLayoutIndexRoute,
+  MainLayoutAnalyticsIndexRoute: MainLayoutAnalyticsIndexRoute,
+  MainLayoutCohortsIndexRoute: MainLayoutCohortsIndexRoute,
+  MainLayoutDashboardIndexRoute: MainLayoutDashboardIndexRoute,
+  MainLayoutEconomicsIndexRoute: MainLayoutEconomicsIndexRoute,
+  MainLayoutNetworkIndexRoute: MainLayoutNetworkIndexRoute,
   MainLayoutPatientsIndexRoute: MainLayoutPatientsIndexRoute,
+  MainLayoutRegionalIndexRoute: MainLayoutRegionalIndexRoute,
+  MainLayoutSimulateIndexRoute: MainLayoutSimulateIndexRoute,
+  MainLayoutWorkflowIndexRoute: MainLayoutWorkflowIndexRoute,
+  MainLayoutAnomaliesAnomalyIdIndexRoute:
+    MainLayoutAnomaliesAnomalyIdIndexRoute,
   MainLayoutPatientsPatientIdIndexRoute: MainLayoutPatientsPatientIdIndexRoute,
 }
 

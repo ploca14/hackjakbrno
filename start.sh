@@ -50,11 +50,13 @@ sleep 5
 # Start backend in background
 echo "🔧 Starting FastAPI backend..."
 cd "$SCRIPT_DIR/back"
-uv run fastapi dev &
+uv run fastapi dev --host localhost --port 8000 &
 BACKEND_PID=$!
 
 sleep 10
 
+
+sleep 5
 
 # Start frontend in background
 echo "🔧 Starting Vite frontend..."
