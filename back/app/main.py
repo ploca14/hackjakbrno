@@ -42,8 +42,8 @@ async def suggest():
             "type": SuggestResultType.PATIENT
         },
         {
-            "label": "874674624 (Brno Kamo)",
-            "type": SuggestResultType.PATIENT
+            "label": "874674624 (Nemocnice Brno Kamo)",
+            "type": SuggestResultType.SERVICE_PROVIDER
         },
         {
             "label": "Toxické účinky (21-X03)",
