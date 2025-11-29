@@ -47,7 +47,7 @@ export const getPatientHistoryPatientsPatientIdHistoryGet = <ThrowOnError extend
 /**
  * Get Patient Futures
  *
- * Get possible futures of this patient
+ * Get possible future trajectories for this patient
  */
 export const getPatientFuturesPatientsPatientIdFuturesGet = <ThrowOnError extends boolean = false>(options: Options<GetPatientFuturesPatientsPatientIdFuturesGetData, ThrowOnError>) => (options.client ?? client).get<GetPatientFuturesPatientsPatientIdFuturesGetResponses, GetPatientFuturesPatientsPatientIdFuturesGetErrors, ThrowOnError>({ url: '/patients/{patient_id}/futures', ...options });
 

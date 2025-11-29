@@ -12,4 +12,13 @@ dependencies = [
     "sentence-transformers",
     "scikit-learn",
     "pandas",
+    "jupyter>=1.1.1",
+    "matplotlib>=3.10.7",
+    "seaborn>=0.13.2",
+    "langchain>=1.1.0",
+    "langchain-iris>=0.2.1",
+    "langchain-openai>=1.1.0",
+    "pydantic>=2.12.5",
+    "langchain-core>=1.1.0",
+    "langchain-text-splitters>=1.0.0",
 ]

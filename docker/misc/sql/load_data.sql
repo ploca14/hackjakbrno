@@ -20,8 +20,8 @@ LOAD DATA FROM FILE '/data/pruchod/Ciselnik_HVLP.csv' INTO DATA.CiselnikHVLP USI
 DROP TABLE IF EXISTS DATA.CiselnikICZ
 CREATE TABLE DATA.CiselnikICZ (ciselnik VARCHAR(255), ciselnik_kod VARCHAR(50), ciselnik_nazev VARCHAR(255), ICZ_IRI VARCHAR(255), ICZ VARCHAR(50), ICZ_nazev VARCHAR(255), ICO VARCHAR(50), ICO_nazev VARCHAR(255), adresa_RUIAN VARCHAR(50), okres_RUIAN VARCHAR(50), adresa_nestr VARCHAR(255), ROS_datum_vzniku_opravneni VARCHAR(50), ROS_datum_zaniku_opravneni VARCHAR(50), NRPZS_druh_poskytovatele_kod VARCHAR(50), NRPZS_datum_zahajeni_cinnosti VARCHAR(50), NRPZS_datum_ukonceni_cinnosti VARCHAR(50))
 LOAD DATA FROM FILE '/data/pruchod/Ciselnik_ICZ.csv' INTO DATA.CiselnikICZ USING {"from":{"file":{"header":"1", "charset":"UTF-8"}}}
-
--- Create indexes for performance
 CREATE INDEX idx_hospitalizace_patient ON DATA.Hospitalizace (ID_PACIENT)
 CREATE INDEX idx_lazne_patient ON DATA.Lazne (ID_PACIENT)
 CREATE INDEX idx_pece_patient ON DATA.Pece (ID_PACIENT)
+DROP TABLE IF EXISTS DATA.PatientEmbeddings
+CREATE TABLE DATA.PatientEmbeddings (ID_PACIENT VARCHAR(50),Embedding VECTOR(DECIMAL, 384))

@@ -122,7 +122,7 @@ export const getPatientFuturesPatientsPatientIdFuturesGetQueryKey = (options: Op
 /**
  * Get Patient Futures
  *
- * Get possible futures of this patient
+ * Get possible future trajectories for this patient
  */
 export const getPatientFuturesPatientsPatientIdFuturesGetOptions = (options: Options<GetPatientFuturesPatientsPatientIdFuturesGetData>) => queryOptions<GetPatientFuturesPatientsPatientIdFuturesGetResponse, GetPatientFuturesPatientsPatientIdFuturesGetError, GetPatientFuturesPatientsPatientIdFuturesGetResponse, ReturnType<typeof getPatientFuturesPatientsPatientIdFuturesGetQueryKey>>({
     queryFn: async ({ queryKey, signal }) => {
