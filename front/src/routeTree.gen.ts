@@ -9,50 +9,117 @@
 // Additionally, you should also exclude this file from your linter and/or formatter to prevent it from being checked or modified.
 
 import { Route as rootRouteImport } from './routes/__root'
-import { Route as IndexRouteImport } from './routes/index'
+import { Route as MainLayoutRouteRouteImport } from './routes/_main-layout/route'
+import { Route as MainLayoutIndexRouteImport } from './routes/_main-layout/index'
+import { Route as MainLayoutPatientsIndexRouteImport } from './routes/_main-layout/patients/index'
+import { Route as MainLayoutPatientsPatientIdIndexRouteImport } from './routes/_main-layout/patients/$patientId/index'
 
-const IndexRoute = IndexRouteImport.update({
-  id: '/',
-  path: '/',
+const MainLayoutRouteRoute = MainLayoutRouteRouteImport.update({
+  id: '/_main-layout',
   getParentRoute: () => rootRouteImport,
 } as any)
+const MainLayoutIndexRoute = MainLayoutIndexRouteImport.update({
+  id: '/',
+  path: '/',
+  getParentRoute: () => MainLayoutRouteRoute,
+} as any)
+const MainLayoutPatientsIndexRoute = MainLayoutPatientsIndexRouteImport.update({
+  id: '/patients/',
+  path: '/patients/',
+  getParentRoute: () => MainLayoutRouteRoute,
+} as any)
+const MainLayoutPatientsPatientIdIndexRoute =
+  MainLayoutPatientsPatientIdIndexRouteImport.update({
+    id: '/patients/$patientId/',
+    path: '/patients/$patientId/',
+    getParentRoute: () => MainLayoutRouteRoute,
+  } as any)
 
 export interface FileRoutesByFullPath {
-  '/': typeof IndexRoute
+  '/': typeof MainLayoutIndexRoute
+  '/patients': typeof MainLayoutPatientsIndexRoute
+  '/patients/$patientId': typeof MainLayoutPatientsPatientIdIndexRoute
 }
 export interface FileRoutesByTo {
-  '/': typeof IndexRoute
+  '/': typeof MainLayoutIndexRoute
+  '/patients': typeof MainLayoutPatientsIndexRoute
+  '/patients/$patientId': typeof MainLayoutPatientsPatientIdIndexRoute
 }
 export interface FileRoutesById {
   __root__: typeof rootRouteImport
-  '/': typeof IndexRoute
+  '/_main-layout': typeof MainLayoutRouteRouteWithChildren
+  '/_main-layout/': typeof MainLayoutIndexRoute
+  '/_main-layout/patients/': typeof MainLayoutPatientsIndexRoute
+  '/_main-layout/patients/$patientId/': typeof MainLayoutPatientsPatientIdIndexRoute
 }
 export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
-  fullPaths: '/'
+  fullPaths: '/' | '/patients' | '/patients/$patientId'
   fileRoutesByTo: FileRoutesByTo
-  to: '/'
-  id: '__root__' | '/'
+  to: '/' | '/patients' | '/patients/$patientId'
+  id:
+    | '__root__'
+    | '/_main-layout'
+    | '/_main-layout/'
+    | '/_main-layout/patients/'
+    | '/_main-layout/patients/$patientId/'
   fileRoutesById: FileRoutesById
 }
 export interface RootRouteChildren {
-  IndexRoute: typeof IndexRoute
+  MainLayoutRouteRoute: typeof MainLayoutRouteRouteWithChildren
 }
 
 declare module '@tanstack/react-router' {
   interface FileRoutesByPath {
-    '/': {
-      id: '/'
+    '/_main-layout': {
+      id: '/_main-layout'
+      path: ''
+      fullPath: ''
+      preLoaderRoute: typeof MainLayoutRouteRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/_main-layout/': {
+      id: '/_main-layout/'
       path: '/'
       fullPath: '/'
-      preLoaderRoute: typeof IndexRouteImport
-      parentRoute: typeof rootRouteImport
+      preLoaderRoute: typeof MainLayoutIndexRouteImport
+      parentRoute: typeof MainLayoutRouteRoute
+    }
+    '/_main-layout/patients/': {
+      id: '/_main-layout/patients/'
+      path: '/patients'
+      fullPath: '/patients'
+      preLoaderRoute: typeof MainLayoutPatientsIndexRouteImport
+      parentRoute: typeof MainLayoutRouteRoute
+    }
+    '/_main-layout/patients/$patientId/': {
+      id: '/_main-layout/patients/$patientId/'
+      path: '/patients/$patientId'
+      fullPath: '/patients/$patientId'
+      preLoaderRoute: typeof MainLayoutPatientsPatientIdIndexRouteImport
+      parentRoute: typeof MainLayoutRouteRoute
     }
   }
 }
 
+interface MainLayoutRouteRouteChildren {
+  MainLayoutIndexRoute: typeof MainLayoutIndexRoute
+  MainLayoutPatientsIndexRoute: typeof MainLayoutPatientsIndexRoute
+  MainLayoutPatientsPatientIdIndexRoute: typeof MainLayoutPatientsPatientIdIndexRoute
+}
+
+const MainLayoutRouteRouteChildren: MainLayoutRouteRouteChildren = {
+  MainLayoutIndexRoute: MainLayoutIndexRoute,
+  MainLayoutPatientsIndexRoute: MainLayoutPatientsIndexRoute,
+  MainLayoutPatientsPatientIdIndexRoute: MainLayoutPatientsPatientIdIndexRoute,
+}
+
+const MainLayoutRouteRouteWithChildren = MainLayoutRouteRoute._addFileChildren(
+  MainLayoutRouteRouteChildren,
+)
+
 const rootRouteChildren: RootRouteChildren = {
-  IndexRoute: IndexRoute,
+  MainLayoutRouteRoute: MainLayoutRouteRouteWithChildren,
 }
 export const routeTree = rootRouteImport
   ._addFileChildren(rootRouteChildren)
