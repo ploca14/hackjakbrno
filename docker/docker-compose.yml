@@ -15,3 +15,12 @@ services:
       - ./data:/data
       - ./fhirUI:/usr/irissys/csp/fhirUI
       - ./:/home/irisowner/irisdev
+      # Add persistent volumes for IRIS database directories
+      - iris_data:/usr/irissys/mgr/FHIRSERVER_DATA
+      - iris_code:/usr/irissys/mgr/FHIRSERVER_CODE
+      - iris_mgr:/usr/irissys/mgr
+
+volumes:
+  iris_data:
+  iris_code:
+  iris_mgr:

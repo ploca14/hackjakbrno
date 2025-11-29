@@ -3,8 +3,6 @@ from fastapi.responses import JSONResponse
 import json
 import logging
 
-from dto.response.HealthService import HealthServiceType
-
 
 class EndpointFilter(logging.Filter):
     def filter(self, record: logging.LogRecord) -> bool:
@@ -18,6 +16,7 @@ from dto.response.patient.PatientHistory import PatientHistory
 from dto.response.patient.PatientFuture import PatientFuture
 from dto.response.EWS import EWS
 from fastapi.middleware.cors import CORSMiddleware
+from vector_engine import vector_engine
 from database import get_patient_events
 
 app = FastAPI()
@@ -34,6 +33,8 @@ app.add_middleware(
 def save_openapi():
     with open("openapi.json", "w") as f:
         json.dump(app.openapi(), f)
+    # Optional: Trigger indexing on startup
+    # vector_engine.index_patients()
 
 @app.get("/suggest", response_model=list[SuggestResult])
 async def suggest():
@@ -72,46 +73,51 @@ async def get_patient_history(patient_id):
     events = get_patient_events(patient_id)
     
     # Map database events to API response format
-    api_events = []
-    for event in events:
-        # Simple mapping, you might want to refine this based on event type
-        api_events.append({
+    api_events = [
+        {
             "label": event.label,
-            "type": HealthServiceType.PROCEDURE, # Defaulting to PROCEDURE for now, map properly if needed
+            "type": event.type,  # Already a HealthServiceType from database layer
             "delta_days": event.date,
             "detail": event.detail
-        })
+        }
+        for event in events
+    ]
         
     return JSONResponse(content={
         "received_health_services": api_events
     })
 
 
-@app.get("/patients/{patient_id}/futures", description="Get possible futures of this patient", response_model=list[PatientFuture])
-async def get_patient_futures(patient_id):
-    return JSONResponse(content=[
-        {
-            "expected_health_services": [
-                    {
-                        "label": "Předepsání prášků na bolest",
-                        "type": HealthServiceType.PROCEDURE,
-                        "delta_days": 2,
-                        "detail": {}
-                    }
-            ],
-            "probability": 60,
-        },
-        {
-            "expected_health_services": [
-                {
-                    "label": "Smrt",
-                    "type": HealthServiceType.DEATH,
-                    "delta_days": 7,
-                    "detail": {}
-                }
-            ]
-        }
-    ])
+@app.get("/patients/{patient_id}/futures", description="Get possible future trajectories for this patient", response_model=list[PatientFuture])
+async def get_patient_futures(patient_id: str, snapshot_events: int = None, top_k: int = 5):
+    """
+    Returns k complete future trajectories based on similar patients.
+    Each trajectory is a real patient's actual journey - coherent and realistic.
+    
+    Uses event-count alignment: finds similar patients and shows what happened
+    to them after the same number of healthcare events.
+    
+    Args:
+        patient_id: The patient ID to predict for
+        snapshot_events: Number of events to use as "current state" (default: all events).
+                        Use this to simulate "what if we queried at event N?"
+        top_k: Number of trajectory completions to return (default: 5)
+    """
+    # Get patient's complete history
+    history = get_patient_events(patient_id)
+
+    if not history:
+        return JSONResponse(content=[])
+    
+    # Get future trajectories using event-count alignment
+    trajectories = vector_engine.get_future_trajectories(
+        patient_history=history,
+        snapshot_events=snapshot_events,
+        top_k=top_k
+    )
+    
+    return JSONResponse(content=trajectories)
+
 
 @app.get("/patients/{patient_id}/ews",
          description="Get a list of possible DRGs that could happen to this person within given time frame",

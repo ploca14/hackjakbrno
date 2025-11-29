@@ -65,7 +65,7 @@ export type HealthService = {
 /**
  * HealthServiceType
  */
-export type HealthServiceType = 'PROCEDURE' | 'MEDICATION' | 'HEALTH_TOOL' | 'STOMATOLOGICAL_TOOL' | 'TRANSPORT' | 'DEATH';
+export type HealthServiceType = 'PROCEDURE' | 'MEDICATION' | 'HEALTH_TOOL' | 'STOMATOLOGICAL_TOOL' | 'TRANSPORT' | 'HOSPITALIZATION' | 'SPA' | 'DEATH' | 'UNKNOWN';
 
 /**
  * Patient
@@ -241,9 +241,18 @@ export type GetPatientFuturesPatientsPatientIdFuturesGetData = {
         /**
          * Patient Id
          */
-        patient_id: unknown;
+        patient_id: string;
     };
-    query?: never;
+    query?: {
+        /**
+         * Snapshot Events
+         */
+        snapshot_events?: number;
+        /**
+         * Top K
+         */
+        top_k?: number;
+    };
     url: '/patients/{patient_id}/futures';
 };
 
