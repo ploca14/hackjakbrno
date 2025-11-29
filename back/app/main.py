@@ -18,7 +18,7 @@ from dto.response.patient.PatientHistory import PatientHistory
 from dto.response.patient.PatientFuture import PatientFuture
 from dto.response.EWS import EWS
 from fastapi.middleware.cors import CORSMiddleware
-from app.database import get_patient_events
+from database import get_patient_events
 
 app = FastAPI()
 
