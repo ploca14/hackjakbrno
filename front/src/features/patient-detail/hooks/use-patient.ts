@@ -2,7 +2,7 @@ import { useQuery } from "@tanstack/react-query";
 import {
   getPatientPatientsPatientIdGetOptions,
   getPatientHistoryPatientsPatientIdHistoryGetOptions,
-  getPatientHistoryPatientsPatientIdFuturesGetOptions,
+  getPatientFuturesPatientsPatientIdFuturesGetOptions,
 } from "@/lib/api-client/@tanstack/react-query.gen";
 
 export const usePatient = (patientId: string) => {
@@ -23,9 +23,9 @@ export const usePatientHistory = (patientId: string) => {
   });
 };
 
-export const usePatientFutures = (patientId: string) => {
+export const usePatientFuture = (patientId: string) => {
   return useQuery({
-    ...getPatientHistoryPatientsPatientIdFuturesGetOptions({
+    ...getPatientFuturesPatientsPatientIdFuturesGetOptions({
       path: { patient_id: patientId },
     }),
     enabled: !!patientId,
