@@ -23,7 +23,7 @@ app = FastAPI()
 
 app.add_middleware(
     CORSMiddleware,
-    allow_origins=["*"],
+    allow_origins=["http://localhost:5173, http://127.0.0.1:3000"],
     allow_methods=["*"],
     allow_headers=["*"],
 )
@@ -59,14 +59,14 @@ async def get_patients():
 
 
 @app.get("/patients/{patient_id}", description="Get detail of a patient", response_model=Patient)
-async def get_patient():
+async def get_patient(patient_id):
     return JSONResponse(content={
         "patient_id": 234321,
         "name": "Franz Kafka"
     })
 
 @app.get("/patients/{patient_id}/history", description="Get history of this patient", response_model=PatientHistory)
-async def get_patient_history():
+async def get_patient_history(patient_id):
     return JSONResponse(content={
         "received_health_services": [
             {
@@ -94,7 +94,7 @@ async def get_patient_history():
 
 
 @app.get("/patients/{patient_id}/futures", description="Get possible futures of this patient", response_model=list[PatientFuture])
-async def get_patient_futures():
+async def get_patient_futures(patient_id):
     return JSONResponse(content=[
         {
             "expected_health_services": [
@@ -122,7 +122,7 @@ async def get_patient_futures():
 @app.get("/patients/{patient_id}/ews",
          description="Get a list of possible DRGs that could happen to this person within given time frame",
          response_model=list[EWS])
-async def get_patient_ews():
+async def get_patient_ews(patient_id):
     return JSONResponse(content=[
         {
             "drg": {
