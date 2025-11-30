@@ -7,14 +7,15 @@ interface TimelineCurrentProps {
 }
 
 export const TimelineCurrent = ({ currentEvent }: TimelineCurrentProps) => {
+  console.log(currentEvent);
   return (
     <CurrentSlot>
-      <div className="relative flex h-full w-full flex-col items-center justify-center ">
+      <div className="relative flex h-full w-full flex-col items-center justify-center">
         <div className={"bg-primary/20 absolute h-2 w-full border"} />
         {currentEvent ? (
           <div
             className={
-              "z-20 flex flex-col gap-4 rounded-2xl bg-blue-100 p-6 relative border-primary border-2"
+              "border-primary relative z-20 flex flex-col gap-4 rounded-2xl border-2 bg-blue-100 p-6"
             }
           >
             <Badge>DNES</Badge>

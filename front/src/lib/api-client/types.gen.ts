@@ -142,9 +142,23 @@ export type ValidationError = {
 export type SuggestSuggestGetData = {
     body?: never;
     path?: never;
-    query?: never;
+    query?: {
+        /**
+         * Query
+         */
+        query?: string;
+    };
     url: '/suggest';
 };
+
+export type SuggestSuggestGetErrors = {
+    /**
+     * Validation Error
+     */
+    422: HttpValidationError;
+};
+
+export type SuggestSuggestGetError = SuggestSuggestGetErrors[keyof SuggestSuggestGetErrors];
 
 export type SuggestSuggestGetResponses = {
     /**

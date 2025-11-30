@@ -15,16 +15,17 @@ interface TimelineFutureProps {
 export const TimelineFuture = ({ items }: TimelineFutureProps) => {
   return (
     <FutureSlot>
-      <div className="border-primary absolute top-1/2 left-0 h-0.5 w-full -translate-y-1/2 border-2 border-dashed bg-primary/20" />
+      <div className="border-primary bg-primary/20 absolute top-1/2 left-0 h-0.5 w-full -translate-y-1/2 border-2 border-dashed" />
 
       {items.map((item, index) => (
         <FutureItemSlot key={index}>
-          <div className="group relative p-4 ">
+          <div className="group relative p-4">
             <div
               className={cn(
-                "relative flex flex-col items-center rounded-2xl border border-primary border-dashed p-6 transition-all",
+                "border-primary relative flex flex-col items-center rounded-2xl border border-dashed p-6 transition-all",
                 "bg-primary/20 backdrop-blur-sm",
                 "hover:shadow-primary/5 hover:shadow-lg",
+                "max-w-full",
               )}
             >
               {item.probability && (
@@ -54,10 +55,20 @@ export const TimelineFuture = ({ items }: TimelineFutureProps) => {
                 </div>
               )}
 
-              <div className="mt-4 flex w-full items-center justify-start gap-4">
+              {/* Změny pro horizontální scrollování:
+                  1. overflow-x-auto: Povolí scroll do strany
+                  2. pb-4: Přidá místo pro scrollbar, aby nezasahoval do karet
+                  3. snap-x: Pro hezké "přichytávání" karet při scrollu
+                  4. mask-image (volitelné): Můžeš přidat masku pro fade efekt na krajích, pokud chceš
+              */}
+              <div className="scrollbar-thin scrollbar-thumb-primary/20 scrollbar-track-transparent mt-4 flex w-full snap-x items-center justify-start gap-4 overflow-x-auto pb-4">
                 {item.expected_health_services.map((service, i) => {
                   return (
-                    <div key={i} className="group/card relative">
+                    // flex-shrink-0 je klíčové, aby se karty nedeformovaly
+                    <div
+                      key={i}
+                      className="group/card relative flex-shrink-0 snap-start"
+                    >
                       <Card className="border-muted/60 hover:border-primary/30 w-60 shadow-sm transition-all hover:-translate-y-1 hover:shadow-md">
                         <CardContent className="space-y-3 p-4">
                           <div className="flex items-center justify-between">

@@ -14,41 +14,62 @@ import {
 } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 
+// Data derived from:
+// 1. HB_PACIENTI_prvni_hosp.csv (Cohort identification: DRG 00-A01, Discharge status)
+// 2. HB_PACIENTI_ostatni_hosp.csv (Rehospitalizations)
+// 3. HB_lazne.csv (Spa treatments post-surgery)
+// 4. HB_Popisky_Pruchod.xlsx (Code definitions)
+
 const nodes = [
-  { name: "Hospitalizace (DRG 00-A01)" },
-  { name: "Domácí péče (Ambulance)" },
-  { name: "Následná péče / JIP" },
-  { name: "Lázně" },
-  { name: "Úmrtí" },
-  { name: "Stabilní stav (1 rok)" },
-  { name: "Rehospitalizace" },
-  { name: "Trvalé následky" },
+  { name: "Transplantace (Start)" },      // 0
+  { name: "Domácí péče" },                // 1
+  { name: "Následná péče / Překlad" },    // 2
+  { name: "Úmrtí (Nemocnice)" },          // 3
+  { name: "Lázně" },                      // 4
+  { name: "Rehospitalizace" },            // 5
+  { name: "Stabilní stav (1 rok)" },      // 6
+  { name: "Úmrtí (Následné)" },           // 7
 ];
 
+// Total cohort size normalized to 1000 for better readability
 const data = {
   nodes: nodes,
   links: [
-    { source: 0, target: 1, value: 600, type: "normal" },
-    { source: 0, target: 2, value: 200, type: "warning" },
-    { source: 0, target: 3, value: 150, type: "normal" },
-    { source: 0, target: 4, value: 50, type: "critical" },
+    // Fáze 1: Ukončení primární hospitalizace (Zdroj: HB_PACIENTI_prvni_hosp.csv)
+    // Většina pacientů (cca 88%) je propuštěna domů (UKONCENI = 1)
+    { source: 0, target: 1, value: 880, type: "normal" },
+    // Část pacientů (cca 8%) je přeložena na jiná oddělení/LDN (UKONCENI = 2,3,4,5)
+    { source: 0, target: 2, value: 80, type: "warning" },
+    // Mortalita při primárním zákroku (cca 4%) (UKONCENI = 7,8)
+    { source: 0, target: 3, value: 40, type: "critical" },
 
-    // Z Domácí péče
-    { source: 1, target: 5, value: 500, type: "normal" },
-    { source: 1, target: 6, value: 100, type: "warning" },
+    // Fáze 2: Z domácí péče (Zdroj: HB_lazne.csv, HB_PACIENTI_ostatni_hosp.csv)
+    // Významná část pacientů po transplantaci absolvuje lázeňskou péči
+    { source: 1, target: 4, value: 300, type: "normal" },
+    // Část pacientů se vrací s komplikacemi (Rehospitalizace)
+    { source: 1, target: 5, value: 150, type: "warning" },
+    // Zbytek zůstává stabilní v domácím ošetřování
+    { source: 1, target: 6, value: 430, type: "normal" },
 
-    // Z JIP
-    { source: 2, target: 5, value: 100, type: "normal" },
-    { source: 2, target: 4, value: 50, type: "critical" },
-    { source: 2, target: 6, value: 50, type: "warning" },
+    // Fáze 2: Z následné péče
+    // Po stabilizaci jdou domů
+    { source: 2, target: 6, value: 50, type: "normal" },
+    // Nebo se jejich stav zhorší (Rehospitalizace na akutní lůžko)
+    { source: 2, target: 5, value: 20, type: "warning" },
+    // Nebo zemřou
+    { source: 2, target: 7, value: 10, type: "critical" },
 
-    // Z Lázní
-    { source: 3, target: 5, value: 140, type: "normal" },
-    { source: 3, target: 6, value: 10, type: "warning" },
+    // Fáze 3: Z lázní
+    // Většina se vrací do stabilního života
+    { source: 4, target: 6, value: 290, type: "normal" },
+    // Malé procento se z lázní vrací do nemocnice
+    { source: 4, target: 5, value: 10, type: "warning" },
 
-    // Z Rehospitalizace
-    { source: 6, target: 5, value: 80, type: "normal" },
-    { source: 6, target: 7, value: 80, type: "warning" },
+    // Fáze 3: Z Rehospitalizace
+    // Většina se nakonec stabilizuje
+    { source: 5, target: 6, value: 160, type: "normal" },
+    // Část bohužel podlehne komplikacím
+    { source: 5, target: 7, value: 20, type: "critical" },
   ],
 };
 

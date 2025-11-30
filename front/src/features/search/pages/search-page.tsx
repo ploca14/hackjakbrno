@@ -9,17 +9,18 @@ import {
   Plus,
   Clock,
   ChevronRight,
-  Command,
+  Command, GitMerge, Map, BrainCircuit,
 } from "lucide-react";
 import { Input } from "@/components/ui/input";
 import { Badge } from "@/components/ui/badge";
-import { Card, CardContent } from "@/components/ui/card";
+import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { useQuery } from "@tanstack/react-query";
-import { useNavigate } from "@tanstack/react-router";
+import { Link, useNavigate } from "@tanstack/react-router";
 import { suggestSuggestGetOptions } from "@/lib/api-client/@tanstack/react-query.gen";
 import type { SuggestResult } from "@/lib/api-client/types.gen";
 import { cn } from "@/lib/utils";
 import { useDebounce } from "use-debounce";
+import { Button } from "@/components/ui/button.tsx";
 
 const SearchPage = () => {
   const navigate = useNavigate();
@@ -57,23 +58,13 @@ const SearchPage = () => {
   };
 
   const handleSuggestionClick = (suggestion: SuggestResult) => {
-    let id: string | null = null;
-
-    if (suggestion.type === "PATIENT") {
-      const match = suggestion.label.match(/^(\d+)/);
-      id = match ? match[1] : null;
-    } else if (suggestion.type === "DRG") {
-      const match = suggestion.label.match(/\(([^)]+)\)$/);
-      id = match ? match[1] : null;
-    } else {
-      const match = suggestion.label.match(/^(\d+)/);
-      id = match ? match[1] : null;
-    }
+    let id: string | null = suggestion.label;
+    console.log(id);
 
     if (!id) return;
 
     if (suggestion.type === "PATIENT") {
-      navigate({ to: "/patients/$patientId", params: { patientId: 56170 } });
+      navigate({ to: "/patients/$patientId", params: { patientId: id } });
     } else if (suggestion.type === "DRG") {
       navigate({ to: "/cohorts" });
     } else if (suggestion.type === "SERVICE_PROVIDER") {
@@ -115,7 +106,7 @@ const SearchPage = () => {
             <Activity className="text-primary size-10" />
           </div>
           <h1 className="text-foreground text-4xl font-bold tracking-tight md:text-5xl">
-            XYZ Portál
+            DataPulse Portál
           </h1>
           <p className="text-muted-foreground max-w-[600px] text-lg">
             Rychlý přístup k pacientům, diagnózám a zdravotní dokumentaci.
@@ -246,40 +237,110 @@ const SearchPage = () => {
           </div>
         </div>
 
-        <div className="animate-in fade-in slide-in-from-bottom-12 grid w-full max-w-2xl grid-cols-1 gap-4 delay-300 duration-700 md:grid-cols-2">
-          <Card className="group hover:border-primary/50 cursor-pointer transition-all hover:shadow-md">
-            <CardContent className="flex items-center gap-4 p-4">
-              <div className="rounded-full bg-green-100 p-3 text-green-600 dark:bg-green-900/20 dark:text-green-400">
-                <Plus className="size-6" />
-              </div>
-              <div className="flex-1">
-                <h3 className="group-hover:text-primary font-semibold transition-colors">
-                  Nový příjem
-                </h3>
-                <p className="text-muted-foreground text-sm">
-                  Registrace nového pacienta
-                </p>
-              </div>
-              <ChevronRight className="text-muted-foreground transition-transform group-hover:translate-x-1" />
-            </CardContent>
-          </Card>
+        {/*<div className="animate-in fade-in slide-in-from-bottom-12 grid w-full max-w-2xl grid-cols-1 gap-4 delay-300 duration-700 md:grid-cols-2">*/}
+        {/*  <Card className="group hover:border-primary/50 cursor-pointer transition-all hover:shadow-md">*/}
+        {/*    <CardContent className="flex items-center gap-4 p-4">*/}
+        {/*      <div className="rounded-full bg-green-100 p-3 text-green-600 dark:bg-green-900/20 dark:text-green-400">*/}
+        {/*        <Plus className="size-6" />*/}
+        {/*      </div>*/}
+        {/*      <div className="flex-1">*/}
+        {/*        <h3 className="group-hover:text-primary font-semibold transition-colors">*/}
+        {/*          Nový příjem*/}
+        {/*        </h3>*/}
+        {/*        <p className="text-muted-foreground text-sm">*/}
+        {/*          Registrace nového pacienta*/}
+        {/*        </p>*/}
+        {/*      </div>*/}
+        {/*      <ChevronRight className="text-muted-foreground transition-transform group-hover:translate-x-1" />*/}
+        {/*    </CardContent>*/}
+        {/*  </Card>*/}
 
-          <Card className="group hover:border-primary/50 cursor-pointer transition-all hover:shadow-md">
-            <CardContent className="flex items-center gap-4 p-4">
-              <div className="rounded-full bg-purple-100 p-3 text-purple-600 dark:bg-purple-900/20 dark:text-purple-400">
-                <Clock className="size-6" />
-              </div>
-              <div className="flex-1">
-                <h3 className="group-hover:text-primary font-semibold transition-colors">
-                  Historie hledání
-                </h3>
-                <p className="text-muted-foreground text-sm">
-                  Zobrazit nedávno otevřené
+        {/*  <Card className="group hover:border-primary/50 cursor-pointer transition-all hover:shadow-md">*/}
+        {/*    <CardContent className="flex items-center gap-4 p-4">*/}
+        {/*      <div className="rounded-full bg-purple-100 p-3 text-purple-600 dark:bg-purple-900/20 dark:text-purple-400">*/}
+        {/*        <Clock className="size-6" />*/}
+        {/*      </div>*/}
+        {/*      <div className="flex-1">*/}
+        {/*        <h3 className="group-hover:text-primary font-semibold transition-colors">*/}
+        {/*          Historie hledání*/}
+        {/*        </h3>*/}
+        {/*        <p className="text-muted-foreground text-sm">*/}
+        {/*          Zobrazit nedávno otevřené*/}
+        {/*        </p>*/}
+        {/*      </div>*/}
+        {/*      <ChevronRight className="text-muted-foreground transition-transform group-hover:translate-x-1" />*/}
+        {/*    </CardContent>*/}
+        {/*  </Card>*/}
+        {/*</div>*/}
+        <div className="grid gap-6 md:grid-cols-3">
+          <Link to="/cohorts" className="group block">
+            <Card className="h-full cursor-pointer transition-colors hover:border-blue-500">
+              <CardHeader>
+                <CardTitle className="flex items-center gap-2">
+                  <GitMerge className="h-5 w-5 text-blue-600" />
+                  Analýza toků (Sankey)
+                </CardTitle>
+              </CardHeader>
+              <CardContent>
+                <p className="text-muted-foreground mb-4 text-sm">
+                  Vizualizace průchodu pacientů mezi nemocnicí, domácí péčí a
+                  lázněmi.
                 </p>
-              </div>
-              <ChevronRight className="text-muted-foreground transition-transform group-hover:translate-x-1" />
-            </CardContent>
-          </Card>
+                <Button
+                  variant="outline"
+                  className="w-full group-hover:bg-blue-50"
+                >
+                  Otevřít analýzu
+                </Button>
+              </CardContent>
+            </Card>
+          </Link>
+
+          <Link to="/regional" className="group block">
+            <Card className="h-full cursor-pointer transition-colors hover:border-green-500">
+              <CardHeader>
+                <CardTitle className="flex items-center gap-2">
+                  <Map className="h-5 w-5 text-green-600" />
+                  Regionální Mapa
+                </CardTitle>
+              </CardHeader>
+              <CardContent>
+                <p className="text-muted-foreground mb-4 text-sm">
+                  Geografický přehled dostupnosti péče a srovnání efektivity
+                  krajů.
+                </p>
+                <Button
+                  variant="outline"
+                  className="w-full group-hover:bg-green-50"
+                >
+                  Zobrazit mapu
+                </Button>
+              </CardContent>
+            </Card>
+          </Link>
+
+          <Link to="/anomalies/1" className="group block">
+            <Card className="h-full cursor-pointer transition-colors hover:border-purple-500">
+              <CardHeader>
+                <CardTitle className="flex items-center gap-2">
+                  <BrainCircuit className="h-5 w-5 text-purple-600" />
+                  AI Detekce
+                </CardTitle>
+              </CardHeader>
+              <CardContent>
+                <p className="text-muted-foreground mb-4 text-sm">
+                  Seznam identifikovaných rizik a anomálií v datech vyžadujících
+                  pozornost.
+                </p>
+                <Button
+                  variant="outline"
+                  className="w-full group-hover:bg-purple-50"
+                >
+                  Řešit anomálie
+                </Button>
+              </CardContent>
+            </Card>
+          </Link>
         </div>
       </div>
     </div>
