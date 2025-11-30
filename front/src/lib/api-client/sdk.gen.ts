@@ -2,7 +2,7 @@
 
 import type { Client, Options as Options2, TDataShape } from './client';
 import { client } from './client.gen';
-import type { GetPatientEwsPatientsPatientIdEwsGetData, GetPatientEwsPatientsPatientIdEwsGetErrors, GetPatientEwsPatientsPatientIdEwsGetResponses, GetPatientFuturesPatientsPatientIdFuturesGetData, GetPatientFuturesPatientsPatientIdFuturesGetErrors, GetPatientFuturesPatientsPatientIdFuturesGetResponses, GetPatientHistoryPatientsPatientIdHistoryGetData, GetPatientHistoryPatientsPatientIdHistoryGetErrors, GetPatientHistoryPatientsPatientIdHistoryGetResponses, GetPatientPatientsPatientIdGetData, GetPatientPatientsPatientIdGetErrors, GetPatientPatientsPatientIdGetResponses, GetPatientsPatientsGetData, GetPatientsPatientsGetResponses, SuggestSuggestGetData, SuggestSuggestGetResponses } from './types.gen';
+import type { GetPatientEwsPatientsPatientIdEwsGetData, GetPatientEwsPatientsPatientIdEwsGetErrors, GetPatientEwsPatientsPatientIdEwsGetResponses, GetPatientFuturesPatientsPatientIdFuturesGetData, GetPatientFuturesPatientsPatientIdFuturesGetErrors, GetPatientFuturesPatientsPatientIdFuturesGetResponses, GetPatientHistoryPatientsPatientIdHistoryGetData, GetPatientHistoryPatientsPatientIdHistoryGetErrors, GetPatientHistoryPatientsPatientIdHistoryGetResponses, GetPatientPatientsPatientIdGetData, GetPatientPatientsPatientIdGetErrors, GetPatientPatientsPatientIdGetResponses, GetPatientsPatientsGetData, GetPatientsPatientsGetResponses, SuggestSuggestGetData, SuggestSuggestGetErrors, SuggestSuggestGetResponses } from './types.gen';
 
 export type Options<TData extends TDataShape = TDataShape, ThrowOnError extends boolean = boolean> = Options2<TData, ThrowOnError> & {
     /**
@@ -21,7 +21,7 @@ export type Options<TData extends TDataShape = TDataShape, ThrowOnError extends 
 /**
  * Suggest
  */
-export const suggestSuggestGet = <ThrowOnError extends boolean = false>(options?: Options<SuggestSuggestGetData, ThrowOnError>) => (options?.client ?? client).get<SuggestSuggestGetResponses, unknown, ThrowOnError>({ url: '/suggest', ...options });
+export const suggestSuggestGet = <ThrowOnError extends boolean = false>(options?: Options<SuggestSuggestGetData, ThrowOnError>) => (options?.client ?? client).get<SuggestSuggestGetResponses, SuggestSuggestGetErrors, ThrowOnError>({ url: '/suggest', ...options });
 
 /**
  * Get Patients

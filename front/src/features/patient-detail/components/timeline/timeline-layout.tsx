@@ -127,7 +127,7 @@ export const HistorySlot = ({ children }: { children: ReactNode }) => {
 
 export const CurrentSlot = ({ children }: { children: ReactNode }) => {
   return (
-    <div className="relative z-20 flex w-[30vw] flex-shrink-0 snap-center flex-col items-center justify-center p-4">
+    <div className="relative z-20 flex w-[30vw] flex-shrink-0 snap-center flex-col items-center justify-center">
       {children}
     </div>
   );

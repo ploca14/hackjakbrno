@@ -5,6 +5,7 @@
   "type": "module",
   "scripts": {
     "dev": "openapi-ts & vite",
+    "watch": "openapi-ts",
     "start": "vite",
     "build": "tsc && vite build",
     "lint": "eslint .",

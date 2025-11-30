@@ -57,23 +57,13 @@ const SearchPage = () => {
   };
 
   const handleSuggestionClick = (suggestion: SuggestResult) => {
-    let id: string | null = null;
-
-    if (suggestion.type === "PATIENT") {
-      const match = suggestion.label.match(/^(\d+)/);
-      id = match ? match[1] : null;
-    } else if (suggestion.type === "DRG") {
-      const match = suggestion.label.match(/\(([^)]+)\)$/);
-      id = match ? match[1] : null;
-    } else {
-      const match = suggestion.label.match(/^(\d+)/);
-      id = match ? match[1] : null;
-    }
+    let id: string | null = suggestion.label;
+    console.log(id);
 
     if (!id) return;
 
     if (suggestion.type === "PATIENT") {
-      navigate({ to: "/patients/$patientId", params: { patientId: 56170 } });
+      navigate({ to: "/patients/$patientId", params: { patientId: id } });
     } else if (suggestion.type === "DRG") {
       navigate({ to: "/cohorts" });
     } else if (suggestion.type === "SERVICE_PROVIDER") {

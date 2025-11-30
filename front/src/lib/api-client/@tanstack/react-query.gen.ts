@@ -4,7 +4,7 @@ import { type DefaultError, queryOptions } from '@tanstack/react-query';
 
 import { client } from '../client.gen';
 import { getPatientEwsPatientsPatientIdEwsGet, getPatientFuturesPatientsPatientIdFuturesGet, getPatientHistoryPatientsPatientIdHistoryGet, getPatientPatientsPatientIdGet, getPatientsPatientsGet, type Options, suggestSuggestGet } from '../sdk.gen';
-import type { GetPatientEwsPatientsPatientIdEwsGetData, GetPatientEwsPatientsPatientIdEwsGetError, GetPatientEwsPatientsPatientIdEwsGetResponse, GetPatientFuturesPatientsPatientIdFuturesGetData, GetPatientFuturesPatientsPatientIdFuturesGetError, GetPatientFuturesPatientsPatientIdFuturesGetResponse, GetPatientHistoryPatientsPatientIdHistoryGetData, GetPatientHistoryPatientsPatientIdHistoryGetError, GetPatientHistoryPatientsPatientIdHistoryGetResponse, GetPatientPatientsPatientIdGetData, GetPatientPatientsPatientIdGetError, GetPatientPatientsPatientIdGetResponse, GetPatientsPatientsGetData, GetPatientsPatientsGetResponse, SuggestSuggestGetData, SuggestSuggestGetResponse } from '../types.gen';
+import type { GetPatientEwsPatientsPatientIdEwsGetData, GetPatientEwsPatientsPatientIdEwsGetError, GetPatientEwsPatientsPatientIdEwsGetResponse, GetPatientFuturesPatientsPatientIdFuturesGetData, GetPatientFuturesPatientsPatientIdFuturesGetError, GetPatientFuturesPatientsPatientIdFuturesGetResponse, GetPatientHistoryPatientsPatientIdHistoryGetData, GetPatientHistoryPatientsPatientIdHistoryGetError, GetPatientHistoryPatientsPatientIdHistoryGetResponse, GetPatientPatientsPatientIdGetData, GetPatientPatientsPatientIdGetError, GetPatientPatientsPatientIdGetResponse, GetPatientsPatientsGetData, GetPatientsPatientsGetResponse, SuggestSuggestGetData, SuggestSuggestGetError, SuggestSuggestGetResponse } from '../types.gen';
 
 export type QueryKey<TOptions extends Options> = [
     Pick<TOptions, 'baseUrl' | 'body' | 'headers' | 'path' | 'query'> & {
@@ -44,7 +44,7 @@ export const suggestSuggestGetQueryKey = (options?: Options<SuggestSuggestGetDat
 /**
  * Suggest
  */
-export const suggestSuggestGetOptions = (options?: Options<SuggestSuggestGetData>) => queryOptions<SuggestSuggestGetResponse, DefaultError, SuggestSuggestGetResponse, ReturnType<typeof suggestSuggestGetQueryKey>>({
+export const suggestSuggestGetOptions = (options?: Options<SuggestSuggestGetData>) => queryOptions<SuggestSuggestGetResponse, SuggestSuggestGetError, SuggestSuggestGetResponse, ReturnType<typeof suggestSuggestGetQueryKey>>({
     queryFn: async ({ queryKey, signal }) => {
         const { data } = await suggestSuggestGet({
             ...options,

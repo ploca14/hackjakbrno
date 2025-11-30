@@ -17,7 +17,7 @@ from dto.response.patient.PatientFuture import PatientFuture
 from dto.response.EWS import EWS
 from fastapi.middleware.cors import CORSMiddleware
 from vector_engine import vector_engine
-from database import get_patient_events
+from database import get_patient_events, search_suggestions
 
 app = FastAPI()
 
@@ -37,21 +37,13 @@ def save_openapi():
     # vector_engine.index_patients()
 
 @app.get("/suggest", response_model=list[SuggestResult])
-async def suggest():
-    return JSONResponse(content=[
-        {
-            "label": "12812937763543 (Franz Kafka)",
-            "type": SuggestResultType.PATIENT
-        },
-        {
-            "label": "874674624 (NemocnTBrno Kamo)",
-            "type": SuggestResultType.SERVICE_PROVIDER
-        },
-        {
-            "label": "Toxické účinky (21-X03)",
-            "type": SuggestResultType.DRG
-        }
-    ])
+async def suggest(query: str = ""):
+    if not query:
+        return []
+
+    # Use the real database search implemented in database.py
+    results = search_suggestions(query)
+    return JSONResponse(content=[r.model_dump() for r in results])
 
 @app.get("/patients", description="Get list of patients", response_model=list[Patient])
 async def get_patients():

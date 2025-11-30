@@ -5,6 +5,7 @@ from typing import List, Dict, Any, Optional
 from pydantic import BaseModel
 
 from dto.response.HealthService import HealthServiceType
+from dto.response.SuggestResult import SuggestResult, SuggestResultType
 
 # --- Configuration ---
 # Update these with your actual IRIS credentials and port
@@ -262,3 +263,56 @@ def get_batch_patient_events(patient_ids: List[str]) -> Dict[str, List[PatientEv
         
     return events_map
 
+def search_suggestions(query_text: str) -> List[SuggestResult]:
+    """
+    Searches for patients, DRGs, and service providers/departments matching the query.
+    """
+    results: List[SuggestResult] = []
+
+    # Return empty list for very short queries to avoid massive scans
+    if not query_text or len(query_text) < 2:
+        return results
+
+    search_pattern = f"%{query_text}%"
+
+    with get_db_connection() as conn:
+        # 1. Search Patients (ID)
+        # Using string matching on ID (casting to VARCHAR for LIKE operator)
+        try:
+            sql_patient = text("SELECT TOP 5 ID_PACIENT FROM DATA.Pacienti WHERE CAST(ID_PACIENT AS VARCHAR) LIKE :q")
+            rows = conn.execute(sql_patient, {"q": search_pattern}).fetchall()
+            for r in rows:
+                results.append(SuggestResult(label=str(r[0]), type=SuggestResultType.PATIENT))
+        except Exception as e:
+            print(f"Error searching patients: {e}")
+
+        # 2. Search DRGs (DATA.Hospitalizace.DRG_NAZEV)
+        try:
+            sql_drg = text("SELECT TOP 5 DISTINCT DRG_NAZEV FROM DATA.Hospitalizace WHERE DRG_NAZEV LIKE :q")
+            rows = conn.execute(sql_drg, {"q": search_pattern}).fetchall()
+            for r in rows:
+                if r[0]:
+                    results.append(SuggestResult(label=r[0], type=SuggestResultType.DRG))
+        except Exception as e:
+            print(f"Error searching DRG: {e}")
+
+        # 3. Search Service Providers / Departments (DATA.Pece.ODB_NAZEV)
+        try:
+            sql_prov = text("SELECT TOP 5 DISTINCT ODB_NAZEV FROM DATA.Pece WHERE ODB_NAZEV LIKE :q")
+            rows = conn.execute(sql_prov, {"q": search_pattern}).fetchall()
+            for r in rows:
+                if r[0]:
+                    results.append(SuggestResult(label=r[0], type=SuggestResultType.SERVICE_PROVIDER))
+        except Exception as e:
+             print(f"Error searching providers: {e}")
+
+    # Deduplicate results just in case (by label+type)
+    unique_results = []
+    seen = set()
+    for res in results:
+        key = (res.label, res.type)
+        if key not in seen:
+            seen.add(key)
+            unique_results.append(res)
+
+    return unique_results[:20]  # Return top 20 matches total
