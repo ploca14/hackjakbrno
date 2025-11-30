@@ -1,7 +1,7 @@
 import os
 from sqlalchemy import create_engine, text
 from datetime import datetime
-from typing import List, Dict, Any
+from typing import List, Dict, Any, Optional
 from pydantic import BaseModel
 
 from dto.response.HealthService import HealthServiceType
@@ -18,6 +18,36 @@ IRIS_NAMESPACE = "FHIRSERVER"
 CONNECTION_STRING = f"iris://{IRIS_USER}:{IRIS_PASSWORD}@{IRIS_HOST}:{IRIS_PORT}/{IRIS_NAMESPACE}"
 
 engine = create_engine(CONNECTION_STRING)
+
+# Cache for medication dictionary
+_medication_dict: Optional[Dict[str, str]] = None
+
+def _get_medication_dictionary() -> Dict[str, str]:
+    """
+    Loads the medication dictionary (CiselnikHVLP) into memory.
+    Cached to avoid repeated database queries.
+    Returns a dict mapping KOD -> NAZEV.
+    """
+    global _medication_dict
+    if _medication_dict is not None:
+        return _medication_dict
+    
+    _medication_dict = {}
+    try:
+        with get_db_connection() as conn:
+            query = text('SELECT KOD, NAZEV FROM "DATA"."CiselnikHVLP"')
+            result = conn.execute(query).fetchall()
+            for row in result:
+                kod = row[0]
+                nazev = row[1]
+                if kod and nazev:
+                    _medication_dict[str(kod)] = str(nazev)
+    except Exception as e:
+        # If dictionary load fails, return empty dict (fallback to original behavior)
+        print(f"Warning: Failed to load medication dictionary: {e}")
+        _medication_dict = {}
+    
+    return _medication_dict
 
 
 def _map_typvyk_to_health_service_type(typvyk: str | None) -> HealthServiceType:
@@ -86,28 +116,45 @@ def get_patient_events(patient_id: str) -> List[PatientEvent]:
             ))
 
         # 3. Fetch Care (Pece)
-        # Aggregated by day, type (TYPVYK), and label to reduce volume
+        # Aggregated by day, type (TYPVYK), KOD, and label to reduce volume
+        # KOD is included for medication lookup in Python (faster than SQL JOIN)
         query_pece = text("""
             SELECT 
                 DNY_OD_ZAKLADNI_PECE, 
-                COALESCE(NAZEV_VYKON, SEGMENT_NAZEV, 'Unknown Care'), 
+                COALESCE(NAZEV_VYKON, SEGMENT_NAZEV, 'Unknown Care') AS label,
                 COUNT(*), 
                 MIN(ODB_NAZEV),
-                TYPVYK
+                TYPVYK,
+                KOD
             FROM "DATA"."Pece" 
             WHERE ID_PACIENT = :pid
-            GROUP BY DNY_OD_ZAKLADNI_PECE, COALESCE(NAZEV_VYKON, SEGMENT_NAZEV, 'Unknown Care'), TYPVYK
+            GROUP BY DNY_OD_ZAKLADNI_PECE, COALESCE(NAZEV_VYKON, SEGMENT_NAZEV, 'Unknown Care'), TYPVYK, KOD
         """)
         result_pece = conn.execute(query_pece, {"pid": patient_id}).fetchall()
+        
+        # Load medication dictionary once
+        med_dict = _get_medication_dictionary()
+        
         for row in result_pece:
             count = row[2]
             label = row[1]
+            typvyk = row[4]
+            kod = row[5]
+            
+            # For medications, try to resolve code to descriptive name
+            if typvyk in ("1", "2") and kod:
+                resolved_name = med_dict.get(str(kod))
+                if resolved_name:
+                    label = resolved_name
+                elif not label or label == "Unknown Care":
+                    label = "Unknown Medication"
+            
             if count > 1:
                 label = f"{label} ({count} items)"
                 
             events.append(PatientEvent(
                 date=row[0] if row[0] is not None else 0,
-                type=_map_typvyk_to_health_service_type(row[4]),
+                type=_map_typvyk_to_health_service_type(typvyk),
                 label=label,
                 detail={"department": row[3], "count": count}
             ))
@@ -163,31 +210,48 @@ def get_batch_patient_events(patient_ids: List[str]) -> Dict[str, List[PatientEv
                 ))
 
         # 3. Fetch Care (Pece)
-        # Aggregated by day, type (TYPVYK), and label to reduce volume
+        # Aggregated by day, type (TYPVYK), KOD, and label to reduce volume
+        # KOD is included for medication lookup in Python (faster than SQL JOIN)
         query_pece = text(f"""
             SELECT 
                 ID_PACIENT, 
                 DNY_OD_ZAKLADNI_PECE, 
-                COALESCE(NAZEV_VYKON, SEGMENT_NAZEV, 'Unknown Care'), 
+                COALESCE(NAZEV_VYKON, SEGMENT_NAZEV, 'Unknown Care') AS label,
                 COUNT(*), 
                 MIN(ODB_NAZEV),
-                TYPVYK
+                TYPVYK,
+                KOD
             FROM "DATA"."Pece" 
             WHERE ID_PACIENT IN ({placeholders})
-            GROUP BY ID_PACIENT, DNY_OD_ZAKLADNI_PECE, COALESCE(NAZEV_VYKON, SEGMENT_NAZEV, 'Unknown Care'), TYPVYK
+            GROUP BY ID_PACIENT, DNY_OD_ZAKLADNI_PECE, COALESCE(NAZEV_VYKON, SEGMENT_NAZEV, 'Unknown Care'), TYPVYK, KOD
         """)
         result_pece = conn.execute(query_pece, bindparams).fetchall()
+        
+        # Load medication dictionary once
+        med_dict = _get_medication_dictionary()
+        
         for row in result_pece:
             pid = row[0]
             if pid in events_map:
                 count = row[3]
                 label = row[2]
+                typvyk = row[5]
+                kod = row[6]
+                
+                # For medications, try to resolve code to descriptive name
+                if typvyk in ("1", "2") and kod:
+                    resolved_name = med_dict.get(str(kod))
+                    if resolved_name:
+                        label = resolved_name
+                    elif not label or label == "Unknown Care":
+                        label = "Unknown Medication"
+                
                 if count > 1:
                     label = f"{label} ({count} items)"
                     
                 events_map[pid].append(PatientEvent(
                     date=row[1] if row[1] is not None else 0,
-                    type=_map_typvyk_to_health_service_type(row[5]),
+                    type=_map_typvyk_to_health_service_type(typvyk),
                     label=label,
                     detail={"department": row[4], "count": count}
                 ))
